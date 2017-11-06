@@ -12,9 +12,10 @@ using System;
 namespace SuperFancyHotel.Data.Migrations
 {
     [DbContext(typeof(SuperFancyHotelContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171106132616_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,7 +27,7 @@ namespace SuperFancyHotel.Data.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<bool>("Available");
+                    b.Property<string>("Available");
 
                     b.Property<DateTime>("DateAvailable");
 
