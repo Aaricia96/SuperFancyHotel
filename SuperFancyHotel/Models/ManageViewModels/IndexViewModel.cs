@@ -16,6 +16,31 @@ namespace SuperFancyHotel.Models.ManageViewModels
         [EmailAddress]
         public string Email { get; set; }
 
+        [Required]
+        [Display(Name = "First name")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [Display(Name = "Last name")]
+        public string LastName { get; set; }
+
+        [Required]
+        [Display(Name = "Address")]
+        public string Address { get; set; }
+
+        [Required]
+        [Display(Name = "Zip code")]
+        public string ZipCode { get; set; }
+
+        [Required]
+        [Display(Name = "City")]
+        public string City { get; set; }
+
+        [Required]
+        [Display(Name = "Country")]
+        public string Country { get; set; }
+
+        [Required]
         [Phone]
         [Display(Name = "Phone number")]
         public string PhoneNumber { get; set; }

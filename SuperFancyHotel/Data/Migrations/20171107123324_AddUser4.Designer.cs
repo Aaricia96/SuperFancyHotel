@@ -12,9 +12,10 @@ using System;
 namespace SuperFancyHotel.Data.Migrations
 {
     [DbContext(typeof(SuperFancyHotelContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171107123324_AddUser4")]
+    partial class AddUser4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,23 +137,13 @@ namespace SuperFancyHotel.Data.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
-                    b.Property<string>("Address");
-
-                    b.Property<string>("City");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
-
-                    b.Property<string>("Country");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
-
-                    b.Property<string>("FirstName");
-
-                    b.Property<string>("LastName");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -177,8 +168,6 @@ namespace SuperFancyHotel.Data.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
 
-                    b.Property<string>("ZipCode");
-
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -190,29 +179,6 @@ namespace SuperFancyHotel.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("SuperFancyHotel.Models.Booking", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("EndDate");
-
-                    b.Property<long>("RoomId");
-
-                    b.Property<DateTime>("StartDate");
-
-                    b.Property<string>("UserId")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoomId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Booking");
                 });
 
             modelBuilder.Entity("SuperFancyHotel.Models.Room", b =>
@@ -276,19 +242,6 @@ namespace SuperFancyHotel.Data.Migrations
                 {
                     b.HasOne("SuperFancyHotel.Models.ApplicationUser")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("SuperFancyHotel.Models.Booking", b =>
-                {
-                    b.HasOne("SuperFancyHotel.Models.Room", "Room")
-                        .WithMany("Booking")
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("SuperFancyHotel.Models.ApplicationUser", "User")
-                        .WithMany("Booking")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

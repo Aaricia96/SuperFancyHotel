@@ -1,9 +1,8 @@
 ﻿using SuperFancyHotel.Enum;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SuperFancyHotel.Models
 {
@@ -19,9 +18,11 @@ namespace SuperFancyHotel.Models
         public ERoomType Type { get; set; }
 
         public ERoomSize Size { get; set; }
-
-        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = false)]
+        
+        [Display(Name = "Room available from")]
+        [DataType(DataType.Date)]
         public DateTime DateAvailable { get; set; }
 
+        public IList<Booking> Booking { get; set; }
     }
 }

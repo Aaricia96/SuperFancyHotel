@@ -12,9 +12,10 @@ using System;
 namespace SuperFancyHotel.Data.Migrations
 {
     [DbContext(typeof(SuperFancyHotelContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171107124535_AddUser5")]
+    partial class AddUser5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -192,29 +193,6 @@ namespace SuperFancyHotel.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("SuperFancyHotel.Models.Booking", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("EndDate");
-
-                    b.Property<long>("RoomId");
-
-                    b.Property<DateTime>("StartDate");
-
-                    b.Property<string>("UserId")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoomId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Booking");
-                });
-
             modelBuilder.Entity("SuperFancyHotel.Models.Room", b =>
                 {
                     b.Property<long>("Id")
@@ -276,19 +254,6 @@ namespace SuperFancyHotel.Data.Migrations
                 {
                     b.HasOne("SuperFancyHotel.Models.ApplicationUser")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("SuperFancyHotel.Models.Booking", b =>
-                {
-                    b.HasOne("SuperFancyHotel.Models.Room", "Room")
-                        .WithMany("Booking")
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("SuperFancyHotel.Models.ApplicationUser", "User")
-                        .WithMany("Booking")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

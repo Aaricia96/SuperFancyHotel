@@ -9,30 +9,23 @@ using SuperFancyHotel.Models;
 
 namespace SuperFancyHotel.Controllers
 {
-    public class RoomsController : Controller
+    public class BookingsController : Controller
     {
         private readonly SuperFancyHotelContext _context;
 
-        public RoomsController(SuperFancyHotelContext context)
+        public BookingsController(SuperFancyHotelContext context)
         {
             _context = context;
         }
 
-        // GET: Rooms
-        public async Task<IActionResult> Index(string searchString)
+        // GET: Bookings
+        public async Task<IActionResult> Index()
         {
-            var rooms = from m in _context.Room
-                         select m;
-
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                rooms = rooms.Where(s => s.Name.Contains(searchString));
-            }
-
-            return View(await rooms.ToListAsync());
+            var superFancyHotelContext = _context.Booking.Include(b => b.Room).Include(x=>x.User);
+            return View(await superFancyHotelContext.ToListAsync());
         }
 
-        // GET: Rooms/Details/5
+        // GET: Bookings/Details/5
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
@@ -40,39 +33,45 @@ namespace SuperFancyHotel.Controllers
                 return NotFound();
             }
 
-            var room = await _context.Room
+            var booking = await _context.Booking
+                .Include(b => b.Room)
+                .Include(x => x.User)
                 .SingleOrDefaultAsync(m => m.Id == id);
-            if (room == null)
+            if (booking == null)
             {
                 return NotFound();
             }
 
-            return View(room);
+            return View(booking);
         }
 
-        // GET: Rooms/Create
+        // GET: Bookings/Create
         public IActionResult Create()
         {
+            ViewData["RoomId"] = new SelectList(_context.Room, "Id", "Name");
+            ViewData["UserId"] = new SelectList(_context.ApplicationUser, "Id", "UserName");
             return View();
         }
 
-        // POST: Rooms/Create
+        // POST: Bookings/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Available,Type,Size,DateAvailable")] Room room)
+        public async Task<IActionResult> Create([Bind("Id,StartDate,EndDate,RoomId,UserId")] Booking booking)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(room);
+                _context.Add(booking);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(room);
+            ViewData["RoomId"] = new SelectList(_context.Room, "Id", "Name", booking.RoomId);
+            ViewData["UserId"] = new SelectList(_context.ApplicationUser, "Id", "UserName", booking.UserId);
+            return View(booking);
         }
 
-        // GET: Rooms/Edit/5
+        // GET: Bookings/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
@@ -80,22 +79,24 @@ namespace SuperFancyHotel.Controllers
                 return NotFound();
             }
 
-            var room = await _context.Room.SingleOrDefaultAsync(m => m.Id == id);
-            if (room == null)
+            var booking = await _context.Booking.SingleOrDefaultAsync(m => m.Id == id);
+            if (booking == null)
             {
                 return NotFound();
             }
-            return View(room);
+            ViewData["RoomName"] = new SelectList(_context.Room, "Id", "Name", booking.RoomId);
+            ViewData["UserName"] = new SelectList(_context.ApplicationUser, "Id", "UserName", booking.UserId);
+            return View(booking);
         }
 
-        // POST: Rooms/Edit/5
+        // POST: Bookings/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Name,Available,Type,Size,DateAvailable")] Room room)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,StartDate,EndDate,RoomName,UserName")] Booking booking)
         {
-            if (id != room.Id)
+            if (id != booking.Id)
             {
                 return NotFound();
             }
@@ -104,12 +105,12 @@ namespace SuperFancyHotel.Controllers
             {
                 try
                 {
-                    _context.Update(room);
+                    _context.Update(booking);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RoomExists(room.Id))
+                    if (!BookingExists(booking.Id))
                     {
                         return NotFound();
                     }
@@ -120,10 +121,12 @@ namespace SuperFancyHotel.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(room);
+            ViewData["RoomName"] = new SelectList(_context.Room, "Id", "Name", booking.RoomId);
+            ViewData["UserName"] = new SelectList(_context.ApplicationUser, "Id", "UserName", booking.UserId);
+            return View(booking);
         }
 
-        // GET: Rooms/Delete/5
+        // GET: Bookings/Delete/5
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -131,30 +134,31 @@ namespace SuperFancyHotel.Controllers
                 return NotFound();
             }
 
-            var room = await _context.Room
+            var booking = await _context.Booking
+                .Include(b => b.Room)
                 .SingleOrDefaultAsync(m => m.Id == id);
-            if (room == null)
+            if (booking == null)
             {
                 return NotFound();
             }
 
-            return View(room);
+            return View(booking);
         }
 
-        // POST: Rooms/Delete/5
+        // POST: Bookings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            var room = await _context.Room.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Room.Remove(room);
+            var booking = await _context.Booking.SingleOrDefaultAsync(m => m.Id == id);
+            _context.Booking.Remove(booking);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool RoomExists(long id)
+        private bool BookingExists(long id)
         {
-            return _context.Room.Any(e => e.Id == id);
+            return _context.Booking.Any(e => e.Id == id);
         }
     }
 }
